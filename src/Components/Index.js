@@ -1,52 +1,40 @@
-import React, { useEffect, useState } from 'react'
-
-const Index = () => {
-
-    const [users, setUsers] = useState([]);
+import * as React from "react";
 
 
+export default function Index() {
+  const [users, setUsers] = React.useState([]);
+  const f = async () => {
+    const res = await fetch("https://reqres.in/api/users/");
+    const json = await res.json();
+    setUsers(json.data);
+  };
+  React.useEffect(() => {
+    f();
+  }, []);
+  return (
+    <div className="App">
 
-    const getUsers = async () => {
-        const response = await fetch("https://api.github.com/users");
-        const FinalData = await response.json();
-        setUsers(FinalData)
-    }
-
-
-
-    useEffect(() => {
-        getUsers();
-    }, [])
-
-
-    return (
-      
-            <div className="container">
-               
-                {
-                    users.map((curElem) => {
-                        return (
-
-                            <div className="card_item" key={curElem.id}>
-                                <div className="card_inner">
+      <div className="flex">
+        {users.length &&
+          users.map((user) => {
+            return (
+                <div className="card_item" key={user.id}>
+                     <div className="card_inner">
                                 <div class="grid-container">
-                                <div class="grid-item"> <img src={curElem.avatar_url} alt="" /> </div>
-                                <div class="grid-item"><div className="userName">{curElem.login}</div> </div>
-                                <div class="grid-item"><div className="userUrl">{'johnsame@gmail.com'}</div> </div>
-                                   </div>
-                                 
-                                </div>
-
-                            </div>
-                        )
-                    })
-                }
-
-            </div>              
-
-
-    )
+                                <img key={user.avatar} src={user.avatar} />         
+                <p>
+                  <strong>{user.first_name}</strong>
+                  <br/>
+                  {user.email}
+                </p>
+                
+                
+              </div>
+              </div>
+              </div>
+            );
+          })}
+      </div>
+    </div>
+  );
 }
-
-export default Index;
-
